@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+file(GLOB LIBEMREGEX_SOURCES include/*.h lib/*.c)
+add_library(libemregex ${LIBEMREGEX_SOURCES})
+set_target_properties(libemregex PROPERTIES OUTPUT_NAME emregex)
+include_directories(include)
+add_executable(emregex src/main.c)
+target_link_libraries(emregex libemregex)
