@@ -34,9 +34,10 @@ static void parseToken(int token) {
     }
 }
 
-void parse(void) {
+void parse(const char* regex) {
+    lexinit(regex);
     int token;
-    while((token = lex()) != EOF) {
+    while((token = lex()) != '\0') {
         parseToken(token);
     }
 }
