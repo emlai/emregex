@@ -3,41 +3,41 @@
 #include <assert.h>
 #include "ast.h"
 
-typedef struct emBranch {
+typedef struct reBranch {
     const char* input;
-    const emregexASTNode* node;
-} emBranch;
+    const reNode* node;
+} reBranch;
 
-extern emregexASTNode stack[];
+extern reNode stack[];
 extern int stacksize;
 
 #define MAX_BRANCHES 1024
-static emBranch branches[MAX_BRANCHES];
+static reBranch branches[MAX_BRANCHES];
 static int branchcount = 0;
 
-void killBranch(emBranch* branch) {
+void killBranch(reBranch* branch) {
     assert(branchcount < MAX_BRANCHES);
     // shift elements after this branch
     int count = branchcount - (branch - branches) - 1;
-    memmove(branch, branch + 1, count * sizeof(emBranch));
+    memmove(branch, branch + 1, count * sizeof(reBranch));
     branchcount--;
 }
 
-void addBranch(const char* input, const emregexASTNode* node) {
+void addBranch(const char* input, const reNode* node) {
     assert(branchcount < MAX_BRANCHES);
     branches[branchcount].input = input;
     branches[branchcount].node = node;
     branchcount++;
 }
 
-bool branchHasMatch(emBranch* branch) {
+bool branchHasMatch(reBranch* branch) {
     if (branch->node >= stack + stacksize) { // node out of bounds
         if (*branch->input != '\0') killBranch(branch);
         return *branch->input == '\0';
     }
 
     switch (branch->node->type) {
-        case emregexChar:
+        case reChar:
             if (*branch->input != branch->node->ch) {
                 killBranch(branch);
             } else {
@@ -45,9 +45,9 @@ bool branchHasMatch(emBranch* branch) {
                 branch->node++;
             }
             break;
-        case emregexStar:
+        case reStar:
             addBranch(branch->input, branch->node + 1);
-            assert(branch->node->operand->type == emregexChar);
+            assert(branch->node->operand->type == reChar);
 
             if (*branch->input != branch->node->operand->ch) {
                 killBranch(branch);
@@ -60,7 +60,7 @@ bool branchHasMatch(emBranch* branch) {
     return false; // no match found yet
 }
 
-bool match(const char* input) {
+bool reMatch(const char* input) {
     addBranch(input, &stack[0]);
 
     while (branchcount > 0) {

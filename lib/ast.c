@@ -2,21 +2,21 @@
 #include <assert.h>
 #include "ast.h"
 
-emregexASTNode emregexMakeChar(char ch) {
-    emregexASTNode node;
-    node.type = emregexChar;
+reNode reMakeChar(char ch) {
+    reNode node;
+    node.type = reChar;
     node.ch = ch;
     return node;
 }
 
-static void emregexPrintNode(emregexASTNode* node) {
+static void rePrintNode(reNode* node) {
     switch (node->type) {
-        case emregexChar:
+        case reChar:
             printf("%c", node->ch);
             break;
-        case emregexStar:
+        case reStar:
             printf("(star ");
-            emregexPrintNode(node->operand);
+            rePrintNode(node->operand);
             printf(")");
             break;
         default:
@@ -24,8 +24,8 @@ static void emregexPrintNode(emregexASTNode* node) {
     }
 }
 
-void emregexPrintAST(emregexASTNode* node, int count) {
-    for (emregexASTNode* end = node + count; node != end; node++) {
-        emregexPrintNode(node);
+void rePrintAST(reNode* node, int count) {
+    for (reNode* end = node + count; node != end; node++) {
+        rePrintNode(node);
     }
 }

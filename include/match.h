@@ -3,6 +3,6 @@
 
 #include <stdbool.h>
 
-bool match(const char* input);
+bool reMatch(const char* input);
 
 #endif

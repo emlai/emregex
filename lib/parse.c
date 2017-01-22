@@ -5,24 +5,24 @@
 #include "ast.h"
 
 #define STACKCAPACITY 1024
-emregexASTNode stack[STACKCAPACITY];
+reNode stack[STACKCAPACITY];
 int stacksize;
 
-static inline void push(emregexASTNode value) {
+static inline void push(reNode value) {
     assert(stacksize < STACKCAPACITY && "stack overflow");
     stack[stacksize++] = value;
 }
 
-static inline emregexASTNode pop(void) {
+static inline reNode pop(void) {
     assert(stacksize > 0 && "stack underflow");
     return stack[--stacksize];
 }
 
-static emregexASTNode parseStar(void) {
-    emregexASTNode* operand = malloc(sizeof(emregexASTNode));
+static reNode parseStar(void) {
+    reNode* operand = malloc(sizeof(reNode));
     *operand = pop();
-    emregexASTNode node;
-    node.type = emregexStar;
+    reNode node;
+    node.type = reStar;
     node.operand = operand;
     return node;
 }
@@ -30,11 +30,11 @@ static emregexASTNode parseStar(void) {
 static void parseToken(int token) {
     switch(token) {
         case '*': push(parseStar()); break;
-        default: push(emregexMakeChar(token)); break;
+        default: push(reMakeChar(token)); break;
     }
 }
 
-void parse(const char* regex) {
+void reParse(const char* regex) {
     lexinit(regex);
     int token;
     while((token = lex()) != '\0') {

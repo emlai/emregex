@@ -10,7 +10,7 @@ int main(int argc, char** argv) {
         return 1;
     }
 
-    parse(argv[1]);
+    reParse(argv[1]);
 
     // read whole stdin to buffer
     #define INPUT_CAPACITY 1024
@@ -33,7 +33,7 @@ int main(int argc, char** argv) {
     while (inputsize > 0 && input[inputsize - 1] == '\n')
         input[--inputsize] = '\0';
 
-    if (match(input)) {
+    if (reMatch(input)) {
         printf("match\n");
         return 0;
     } else {

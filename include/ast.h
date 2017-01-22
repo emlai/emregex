@@ -1,20 +1,20 @@
 #ifndef EMREGEX_AST_H
 #define EMREGEX_AST_H
 
-typedef enum emregexASTNodeType {
-    emregexChar,
-    emregexStar,
-} emregexASTNodeType;
+typedef enum reNodeType {
+    reChar,
+    reStar,
+} reNodeType;
 
-typedef struct emregexASTNode {
-    emregexASTNodeType type;
+typedef struct reNode {
+    reNodeType type;
     union {
-        struct emregexASTNode* operand;
+        struct reNode* operand;
         char ch;
     };
-} emregexASTNode;
+} reNode;
 
-emregexASTNode emregexMakeChar(char ch);
-void emregexPrintAST(emregexASTNode* nodes, int count);
+reNode reMakeChar(char ch);
+void rePrintAST(reNode* nodes, int count);
 
 #endif
