@@ -19,6 +19,11 @@ static void rePrintNode(reNode* node) {
             rePrintNode(node->operand);
             printf(")");
             break;
+        case reOpt:
+            printf("(opt ");
+            rePrintNode(node->operand);
+            printf(")");
+            break;
         default:
             assert(0);
     }

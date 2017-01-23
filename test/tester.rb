@@ -76,3 +76,17 @@ check "a*a" do |p|
     p.should_not_match ""
     p.should_not_match "aba"
 end
+
+check "a?" do |p|
+    p.should_match ""
+    p.should_match "a"
+
+    p.should_not_match "aa"
+end
+
+check "aa?b?" do |p|
+    p.should_match "a"
+    p.should_match "aa"
+    p.should_match "ab"
+    p.should_match "aab"
+end

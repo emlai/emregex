@@ -18,18 +18,19 @@ static inline reNode pop(void) {
     return stack[--stacksize];
 }
 
-static reNode parseStar(void) {
+static reNode parseNode(reNodeType type) {
     reNode* operand = malloc(sizeof(reNode));
     *operand = pop();
     reNode node;
-    node.type = reStar;
+    node.type = type;
     node.operand = operand;
     return node;
 }
 
 static void parseToken(int token) {
     switch(token) {
-        case '*': push(parseStar()); break;
+        case '*': push(parseNode(reStar)); break;
+        case '?': push(parseNode(reOpt)); break;
         default: push(reMakeChar(token)); break;
     }
 }

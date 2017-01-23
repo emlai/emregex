@@ -55,6 +55,17 @@ bool branchHasMatch(reBranch* branch) {
                 branch->input++;
             }
             break;
+        case reOpt:
+            addBranch(branch->input, branch->node + 1);
+            assert(branch->node->operand->type == reChar);
+
+            if (*branch->input != branch->node->operand->ch) {
+                killBranch(branch);
+            } else {
+                branch->input++;
+                branch->node++;
+            }
+            break;
     }
 
     return false; // no match found yet

@@ -4,6 +4,7 @@
 typedef enum reNodeType {
     reChar,
     reStar,
+    reOpt,
 } reNodeType;
 
 typedef struct reNode {
