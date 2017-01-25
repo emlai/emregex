@@ -124,3 +124,4 @@ check "abc(def)" do |p|
 end
 
 require_relative "ast_printer_test"
+require_relative "benchmark"
