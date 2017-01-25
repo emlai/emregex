@@ -123,3 +123,4 @@ check "abc(def)" do |p|
     p.should_not_match "abcf"
 end
 
+require_relative "ast_printer_test"

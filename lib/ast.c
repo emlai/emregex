@@ -14,6 +14,14 @@ static void rePrintNode(reNode* node) {
         case reChar:
             printf("%c", node->ch);
             break;
+        case reSeq:
+            printf("(seq");
+            for (int idx = 0; idx < node->elemcount; idx++) {
+                printf(" ");
+                rePrintNode(&node->elems[idx]);
+            }
+            printf(")");
+            break;
         case reStar:
             printf("(star ");
             rePrintNode(node->operand);
@@ -24,13 +32,10 @@ static void rePrintNode(reNode* node) {
             rePrintNode(node->operand);
             printf(")");
             break;
-        default:
-            assert(0);
     }
 }
 
-void rePrintAST(reNode* node, int count) {
-    for (reNode* end = node + count; node != end; node++) {
-        rePrintNode(node);
-    }
+void rePrintAST(void) {
+    extern reNode root;
+    rePrintNode(&root);
 }

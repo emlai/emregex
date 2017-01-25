@@ -21,6 +21,6 @@ typedef struct reNode {
 } reNode;
 
 reNode reMakeChar(char ch);
-void rePrintAST(reNode* nodes, int count);
+void rePrintAST(void);
 
 #endif
