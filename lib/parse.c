@@ -4,41 +4,50 @@
 #include "lex.h"
 #include "ast.h"
 
-#define STACKCAPACITY 1024
-reNode stack[STACKCAPACITY];
-int stacksize;
+reNode root;
 
-static inline void push(reNode value) {
-    assert(stacksize < STACKCAPACITY && "stack overflow");
-    stack[stacksize++] = value;
-}
-
-static inline reNode pop(void) {
-    assert(stacksize > 0 && "stack underflow");
-    return stack[--stacksize];
-}
+static reNode parseToken(int);
 
 static reNode parseNode(reNodeType type) {
     reNode* operand = malloc(sizeof(reNode));
-    *operand = pop();
+    *operand = root.elems[--root.elemcount];
     reNode node;
     node.type = type;
     node.operand = operand;
     return node;
 }
 
-static void parseToken(int token) {
+static void parseSeq(reNode* node, const char terminator) {
+    int capacity = 64;
+    node->type = reSeq;
+    node->elems = malloc(capacity * sizeof(reNode));
+    node->elemcount = 0;
+    int token;
+
+    while((token = lex()) != terminator) {
+        reNode new = parseToken(token); // may decrease node->elemcount
+        if (node->elemcount >= capacity) {
+            capacity *= 2;
+            node->elems = realloc(node->elems, capacity * sizeof(reNode));
+        }
+        node->elems[node->elemcount++] = new;
+    }
+}
+
+static reNode parseToken(int token) {
     switch(token) {
-        case '*': push(parseNode(reStar)); break;
-        case '?': push(parseNode(reOpt)); break;
-        default: push(reMakeChar(token)); break;
+        case '(': {
+            reNode node;
+            parseSeq(&node, ')');
+            return node;
+        }
+        case '*': return parseNode(reStar);
+        case '?': return parseNode(reOpt);
+        default:  return reMakeChar(token);
     }
 }
 
 void reParse(const char* regex) {
     lexinit(regex);
-    int token;
-    while((token = lex()) != '\0') {
-        parseToken(token);
-    }
+    parseSeq(&root, '\0');
 }

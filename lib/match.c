@@ -8,8 +8,7 @@ typedef struct reBranch {
     const reNode* node;
 } reBranch;
 
-extern reNode stack[];
-extern int stacksize;
+extern reNode root;
 
 #define MAX_BRANCHES 1024
 static reBranch branches[MAX_BRANCHES];
@@ -30,49 +29,46 @@ void addBranch(const char* input, const reNode* node) {
     branchcount++;
 }
 
+static bool consumeNode(reBranch* branch, const reNode* node) {
+    switch (node->type) {
+        case reChar:
+            if (*branch->input != node->ch) {
+                killBranch(branch);
+            } else {
+                branch->input++;
+                return true;
+            }
+            break;
+        case reSeq:
+            for (int idx = 0; idx < node->elemcount; idx++) {
+                if (!consumeNode(branch, &node->elems[idx]))
+                    return false;
+            }
+            return true;
+        case reStar:
+            addBranch(branch->input, node + 1);
+            consumeNode(branch, node->operand);
+            break;
+        case reOpt:
+            addBranch(branch->input, node + 1);
+            return consumeNode(branch, node->operand);
+    }
+    return false;
+}
+
 bool branchHasMatch(reBranch* branch) {
-    if (branch->node >= stack + stacksize) { // node out of bounds
+    if (branch->node >= root.elems + root.elemcount) { // node out of bounds
         if (*branch->input != '\0') killBranch(branch);
         return *branch->input == '\0';
     }
-
-    switch (branch->node->type) {
-        case reChar:
-            if (*branch->input != branch->node->ch) {
-                killBranch(branch);
-            } else {
-                branch->input++;
-                branch->node++;
-            }
-            break;
-        case reStar:
-            addBranch(branch->input, branch->node + 1);
-            assert(branch->node->operand->type == reChar);
-
-            if (*branch->input != branch->node->operand->ch) {
-                killBranch(branch);
-            } else {
-                branch->input++;
-            }
-            break;
-        case reOpt:
-            addBranch(branch->input, branch->node + 1);
-            assert(branch->node->operand->type == reChar);
-
-            if (*branch->input != branch->node->operand->ch) {
-                killBranch(branch);
-            } else {
-                branch->input++;
-                branch->node++;
-            }
-            break;
+    if (consumeNode(branch, branch->node)) {
+        branch->node++; // consume top-level node
     }
-
-    return false; // no match found yet
+    return false;
 }
 
 bool reMatch(const char* input) {
-    addBranch(input, &stack[0]);
+    addBranch(input, &root.elems[0]);
 
     while (branchcount > 0) {
         for (int idx = 0; idx < branchcount; idx++) {

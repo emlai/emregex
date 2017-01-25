@@ -90,3 +90,36 @@ check "aa?b?" do |p|
     p.should_match "ab"
     p.should_match "aab"
 end
+
+check "(ab)*" do |p|
+    p.should_match ""
+    p.should_match "ab"
+    p.should_match "abab"
+
+    p.should_not_match "a"
+    p.should_not_match "aa"
+    p.should_not_match "abb"
+    p.should_not_match "aba"
+end
+
+check "(ab)?" do |p|
+    p.should_match ""
+    p.should_match "ab"
+
+    p.should_not_match "abab"
+    p.should_not_match "a"
+    p.should_not_match "aa"
+    p.should_not_match "abb"
+    p.should_not_match "aba"
+end
+
+check "abc(def)" do |p|
+    p.should_match "abcdef"
+
+    p.should_not_match "abc"
+    p.should_not_match "def"
+    p.should_not_match "abcd"
+    p.should_not_match "cdef"
+    p.should_not_match "abcf"
+end
+

@@ -3,6 +3,7 @@
 
 typedef enum reNodeType {
     reChar,
+    reSeq,
     reStar,
     reOpt,
 } reNodeType;
@@ -10,6 +11,10 @@ typedef enum reNodeType {
 typedef struct reNode {
     reNodeType type;
     union {
+        struct {
+            struct reNode* elems; // the element array when type == reSeq
+            int elemcount;
+        };
         struct reNode* operand;
         char ch;
     };
