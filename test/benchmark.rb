@@ -17,4 +17,4 @@ end
 
 measure "a(bc)?d*d", 0.085, ("abcdddddddddaddddddddd" * 10000)
 measure "(foo)*", 0.075, ("foo" * 10000)
-measure "a*b", 0.08, ("aa" * 100000 + "b")
+measure "a*b", 0.1, ("aa" * 100000 + "b")

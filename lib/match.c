@@ -1,10 +1,11 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+#include "match.h"
 #include "ast.h"
 
 typedef struct reBranch {
-    const char* input;
+    char input;
     const reNode* node;
 } reBranch;
 
@@ -13,6 +14,12 @@ extern reNode root;
 #define MAX_BRANCHES 1024
 static reBranch branches[MAX_BRANCHES];
 static int branchcount = 0;
+static FILE* inputfile;
+
+static inline void advanceInput(reBranch* branch) {
+    int input = getc(inputfile);
+    branch->input = (input == EOF || input == '\n') ? '\0' : input;
+}
 
 void killBranch(reBranch* branch) {
     assert(branchcount < MAX_BRANCHES);
@@ -22,7 +29,7 @@ void killBranch(reBranch* branch) {
     branchcount--;
 }
 
-void addBranch(const char* input, const reNode* node) {
+void addBranch(char input, const reNode* node) {
     assert(branchcount < MAX_BRANCHES);
     branches[branchcount].input = input;
     branches[branchcount].node = node;
@@ -32,10 +39,10 @@ void addBranch(const char* input, const reNode* node) {
 static bool consumeNode(reBranch* branch, const reNode* node) {
     switch (node->type) {
         case reChar:
-            if (*branch->input != node->ch) {
+            if (branch->input != node->ch) {
                 killBranch(branch);
             } else {
-                branch->input++;
+                advanceInput(branch);
                 return true;
             }
             break;
@@ -58,8 +65,8 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
 
 bool branchHasMatch(reBranch* branch) {
     if (branch->node >= root.elems + root.elemcount) { // node out of bounds
-        if (*branch->input != '\0') killBranch(branch);
-        return *branch->input == '\0';
+        if (branch->input != '\0') killBranch(branch);
+        return branch->input == '\0';
     }
     if (consumeNode(branch, branch->node)) {
         branch->node++; // consume top-level node
@@ -67,8 +74,10 @@ bool branchHasMatch(reBranch* branch) {
     return false;
 }
 
-bool reMatch(const char* input) {
-    addBranch(input, &root.elems[0]);
+bool reMatch(FILE* input) {
+    inputfile = input;
+    addBranch(0, &root.elems[0]);
+    advanceInput(&branches[0]);
 
     while (branchcount > 0) {
         for (int idx = 0; idx < branchcount; idx++) {
