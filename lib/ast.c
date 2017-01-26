@@ -2,7 +2,7 @@
 #include <assert.h>
 #include "ast.h"
 
-reNode reMakeChar(char ch) {
+reNode reMakeChar(int ch) {
     reNode node;
     node.type = reChar;
     node.ch = ch;

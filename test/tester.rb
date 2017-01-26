@@ -9,7 +9,8 @@ $emregex = ARGV[0]
 
 class String
     def match?(input)
-        @output = `echo "#{input}" | #{$emregex} "#{self}"`
+        input.gsub!("\\", "\\\\\\\\")
+        @output = `echo '#{input}' | #{$emregex} "#{self}"`
         return $?.success?
     end
 
@@ -123,5 +124,28 @@ check "abc(def)" do |p|
     p.should_not_match "abcf"
 end
 
+check "a.b" do |p|
+    p.should_match "acb"
+    p.should_match "aab"
+    p.should_match "a b"
+    p.should_match "a.b"
+    p.should_match "a\\b"
+
+    p.should_not_match "ab"
+    p.should_not_match "a\\\\b"
+end
+
+check "a\\.b" do |p|
+    p.should_match "a.b"
+
+    p.should_not_match "acb"
+    p.should_not_match "aab"
+    p.should_not_match "a b"
+    p.should_not_match "a\\b"
+    p.should_not_match "ab"
+    p.should_not_match "a\\\\b"
+end
+
+require_relative "errors"
 require_relative "ast_printer_test"
 require_relative "benchmark"

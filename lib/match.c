@@ -3,6 +3,7 @@
 #include <assert.h>
 #include "match.h"
 #include "ast.h"
+#include "lex.h"
 
 typedef struct reBranch {
     char input;
@@ -36,10 +37,17 @@ void addBranch(char input, const reNode* node) {
     branchcount++;
 }
 
+static bool inputMatches(const char input, const int ch) {
+    switch ((reToken) ch) {
+        case reDot: return true;
+    }
+    return input == ch;
+}
+
 static bool consumeNode(reBranch* branch, const reNode* node) {
     switch (node->type) {
         case reChar:
-            if (branch->input != node->ch) {
+            if (!inputMatches(branch->input, node->ch)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);

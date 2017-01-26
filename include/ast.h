@@ -16,11 +16,11 @@ typedef struct reNode {
             int elemcount;
         };
         struct reNode* operand;
-        char ch;
+        int ch; // a char (< 256) or a reToken (>= 256).
     };
 } reNode;
 
-reNode reMakeChar(char ch);
+reNode reMakeChar(int ch);
 void rePrintAST(void);
 
 #endif
