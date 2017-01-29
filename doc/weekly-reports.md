@@ -1,5 +1,16 @@
 # Weekly reports
 
+## Week 2
+
+Time used: ~15 hours
+
+- Implemented the following regex operations / special characters:
+  `?`, `()`, `.`. Some restructuring was needed to make `()` work.
+- Allow `.` to be escaped with backslash: `\.`.
+- Wrote tests for the new features. Also added some benchmark tests.
+- Wrote lots of documentation comments.
+- Next up: add more features, e.g. ranges, character classes, anchors.
+
 ## Week 1
 
 Time used: ~15 hours
