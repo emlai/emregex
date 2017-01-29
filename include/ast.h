@@ -1,13 +1,15 @@
 #ifndef EMREGEX_AST_H
 #define EMREGEX_AST_H
 
+/// The type of a regex node.
 typedef enum reNodeType {
-    reChar,
-    reSeq,
-    reStar,
-    reOpt,
+    reChar, /// An ASCII character or a token, stored in `ch`.
+    reSeq,  /// A sequence of regex nodes, stored in `elems` and `elemcount`.
+    reStar, /// A regex star operation, the operand is stored in `operand`.
+    reOpt,  /// A regex optional operation ('?'), operand is in `operand`.
 } reNodeType;
 
+/// A regex AST node. See above for details on member variables.
 typedef struct reNode {
     reNodeType type;
     union {

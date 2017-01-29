@@ -2,6 +2,7 @@
 #include <assert.h>
 #include "ast.h"
 
+/// Helper for making a node out of the given character or token.
 reNode reMakeChar(int ch) {
     reNode node;
     node.type = reChar;
@@ -9,6 +10,7 @@ reNode reMakeChar(int ch) {
     return node;
 }
 
+/// Prints the AST rooted at the given node.
 static void rePrintNode(reNode* node) {
     switch (node->type) {
         case reChar:
@@ -35,6 +37,7 @@ static void rePrintNode(reNode* node) {
     }
 }
 
+/// Prints the global AST.
 void rePrintAST(void) {
     extern reNode root;
     rePrintNode(&root);

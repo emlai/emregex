@@ -4,10 +4,13 @@
 #include "lex.h"
 #include "ast.h"
 
+/// Global storage for the current AST.
 reNode root;
 
 static reNode parseToken(int);
 
+/// Parses a simple postfix node (e.g. '?' or '*') from the input stream
+/// and returns it.
 static reNode parseNode(reNodeType type) {
     reNode* operand = malloc(sizeof(reNode));
     *operand = root.elems[--root.elemcount];
@@ -17,6 +20,8 @@ static reNode parseNode(reNodeType type) {
     return node;
 }
 
+/// Parses a sequence of nodes from the input stream and stores it in the
+/// given node. Stops at the given terminator, consuming it.
 static void parseSeq(reNode* node, const char terminator) {
     int capacity = 64;
     node->type = reSeq;
@@ -34,6 +39,8 @@ static void parseSeq(reNode* node, const char terminator) {
     }
 }
 
+/// Parses a node based on the given token, delegating to one of the
+/// specialized parser functions above.
 static reNode parseToken(int token) {
     switch(token) {
         case '(': {
@@ -47,6 +54,7 @@ static reNode parseToken(int token) {
     }
 }
 
+/// Parses the given regex and stores its AST in the global `root`.
 void reParse(const char* regex) {
     lexinit(regex);
     parseSeq(&root, '\0');
