@@ -44,14 +44,33 @@ static void parseSeq(reNode* node, const char terminator) {
     }
 }
 
-/// Parses a bracket-delimited range, e.g. [a-z].
+/// Parses a bracket-delimited range, e.g. [a-z] or [abc].
 static reNode parseRange(void) {
     reNode node;
-    node.type = reRange;
     node.lowerbound = lex();
-    if (lex() != '-') error("expected '-' after first operand in range");
-    node.upperbound = lex();
-    if (lex() != reRBracket) error("expected ']' to terminate range");
+    int ch = lex();
+    if (ch == '-') {
+        // Contiguous range expressed with a hyphen, e.g. [a-z].
+        node.type = reRange;
+        node.upperbound = lex();
+        if (lex() != reRBracket) error("expected ']' to terminate range");
+    } else {
+        // Range of explicitly listed alternatives, e.g. [aeiou].
+        node.type = reRange2;
+        int capacity = 16;
+        char* characters = malloc(capacity);
+        int count = 0;
+        characters[count++] = node.lowerbound;
+        do {
+            if (count >= capacity) {
+                capacity *= 2;
+                characters = realloc(characters, capacity);
+            }
+            characters[count++] = ch;
+        } while ((ch = lex()) != reRBracket);
+        characters[count] = '\0';
+        node.characters = characters;
+    }
     return node;
 }
 

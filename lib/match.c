@@ -65,6 +65,14 @@ static bool inputMatchesRange(char input, char lowerbound, char upperbound) {
     return input >= lowerbound && input <= upperbound;
 }
 
+/// Checks whether the given input symbol is in the given character array.
+static bool inputMatchesRange2(char input, char* characters) {
+    while (*characters)
+        if (*characters++ == input)
+            return true;
+    return false;
+}
+
 /// Evaluates the given node, and returns true if the node
 /// should be consumed at the top level (i.e. in branchHasMatch()).
 static bool consumeNode(reBranch* branch, const reNode* node) {
@@ -92,6 +100,14 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
             return consumeNode(branch, node->operand);
         case reRange:
             if (!inputMatchesRange(branch->input, node->lowerbound, node->upperbound)) {
+                killBranch(branch);
+            } else {
+                advanceInput(branch);
+                return true;
+            }
+            break;
+        case reRange2:
+            if (!inputMatchesRange2(branch->input, node->characters)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);

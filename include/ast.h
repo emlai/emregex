@@ -9,6 +9,8 @@ typedef enum reNodeType {
     reOpt,  /// A regex optional operation ('?'), operand is in `operand`.
     reRange,/// A bracket-delimited range of values, e.g. [a-z], operands in
             /// `lowerbound` and `upperbound`.
+    reRange2,/// A bracket-delimited range of explicitly listed characters, e.g.
+            /// [aeiou], the null-terminated character list in `alternatives`.
 } reNodeType;
 
 /// A regex AST node. See above for details on member variables.
@@ -23,6 +25,7 @@ typedef struct reNode {
             int lowerbound; // the minimum character when type == reRange
             int upperbound; // the maximum character when type == reRange
         };
+        char* characters; // the list of characters when type == reRange2
         struct reNode* operand;
         int ch; // a char (< 256) or a reToken (>= 256).
     };

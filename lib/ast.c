@@ -37,6 +37,9 @@ static void rePrintNode(reNode* node) {
         case reRange:
             printf("(range %c %c)", node->lowerbound, node->upperbound);
             break;
+        case reRange2:
+            printf("(range2 %s)", node->characters);
+            break;
     }
 }
 
