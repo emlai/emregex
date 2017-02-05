@@ -1,5 +1,18 @@
 # Weekly reports
 
+## Week 3
+
+Time used: ~2 hours
+
+- Implemented character classes for matching digits (`\d`) and
+  non-digits (`\D`).
+- Implemented contiguos range expressions (e.g. `[a-z]`), and
+  non-contiguous range expressions (e.g. `[aeiou]`).
+- Doc-commented all the new functionality.
+- Wrote tests for the new functionality.
+- Next up: more features, for example range negation (e.g. `[^abc]`),
+  and or-expression (e.g. `foo|bar`).
+
 ## Week 2
 
 Time used: ~15 hours
