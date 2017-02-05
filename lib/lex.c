@@ -37,6 +37,7 @@ int lex(void) {
             const int nextch = readchar();
             switch (nextch) {
                 case '.': return '.';
+                case 'd': return reDigit;
                 default:
                     printf("invalid escape sequence '\\%c'", nextch);
                     exit(1);

@@ -146,6 +146,16 @@ check "a\\.b" do |p|
     p.should_not_match "a\\\\b"
 end
 
+check "\\d*" do |p|
+    p.should_match "0123456789"
+    p.should_match ""
+
+    p.should_not_match " "
+    p.should_not_match "d"
+    p.should_not_match "\\d"
+    p.should_not_match "-"
+end
+
 require_relative "errors"
 require_relative "ast_printer_test"
 require_relative "benchmark"

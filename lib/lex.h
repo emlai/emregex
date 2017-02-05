@@ -6,6 +6,7 @@
 /// starting from 256.
 typedef enum reToken {
     reDot = 256,
+    reDigit,
 } reToken;
 
 void lexinit(const char* input);

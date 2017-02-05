@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
+#include <ctype.h>
 #include "match.h"
 #include "ast.h"
 #include "lex.h"
@@ -50,6 +51,7 @@ void addBranch(char input, const reNode* node) {
 static bool inputMatches(const char input, const int token) {
     switch ((reToken) token) {
         case reDot: return true;
+        case reDigit: return isdigit(input);
     }
     return input == token;
 }
