@@ -156,6 +156,15 @@ check "\\d*" do |p|
     p.should_not_match "-"
 end
 
+check "\\D\\D?" do |p|
+    p.should_match "a"
+    p.should_match "aa"
+
+    p.should_not_match "0"
+    p.should_not_match "a0"
+    p.should_not_match "0a"
+end
+
 require_relative "errors"
 require_relative "ast_printer_test"
 require_relative "benchmark"

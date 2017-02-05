@@ -52,6 +52,7 @@ static bool inputMatches(const char input, const int token) {
     switch ((reToken) token) {
         case reDot: return true;
         case reDigit: return isdigit(input);
+        case reNonDigit: return !isdigit(input);
     }
     return input == token;
 }

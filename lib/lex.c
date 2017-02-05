@@ -38,6 +38,7 @@ int lex(void) {
             switch (nextch) {
                 case '.': return '.';
                 case 'd': return reDigit;
+                case 'D': return reNonDigit;
                 default:
                     printf("invalid escape sequence '\\%c'", nextch);
                     exit(1);

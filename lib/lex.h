@@ -7,6 +7,7 @@
 typedef enum reToken {
     reDot = 256,
     reDigit,
+    reNonDigit,
 } reToken;
 
 void lexinit(const char* input);
