@@ -33,12 +33,16 @@ int lex(void) {
     const int ch = readchar();
     switch (ch) {
         case '.': return reDot;
+        case '[': return reLBracket;
+        case ']': return reRBracket;
         case '\\': {
             const int nextch = readchar();
             switch (nextch) {
                 case '.': return '.';
                 case 'd': return reDigit;
                 case 'D': return reNonDigit;
+                case '[': return '[';
+                case ']': return ']';
                 default:
                     printf("invalid escape sequence '\\%c'", nextch);
                     exit(1);

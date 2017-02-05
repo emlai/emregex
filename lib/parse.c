@@ -9,6 +9,11 @@ reNode root;
 
 static reNode parseToken(int);
 
+static void error(const char* msg) {
+    printf("%s\n", msg);
+    exit(1);
+}
+
 /// Parses a simple postfix node (e.g. '?' or '*') from the input stream
 /// and returns it.
 static reNode parseNode(reNodeType type) {
@@ -39,6 +44,17 @@ static void parseSeq(reNode* node, const char terminator) {
     }
 }
 
+/// Parses a bracket-delimited range, e.g. [a-z].
+static reNode parseRange(void) {
+    reNode node;
+    node.type = reRange;
+    node.lowerbound = lex();
+    if (lex() != '-') error("expected '-' after first operand in range");
+    node.upperbound = lex();
+    if (lex() != reRBracket) error("expected ']' to terminate range");
+    return node;
+}
+
 /// Parses a node based on the given token, delegating to one of the
 /// specialized parser functions above.
 static reNode parseToken(int token) {
@@ -50,6 +66,8 @@ static reNode parseToken(int token) {
         }
         case '*': return parseNode(reStar);
         case '?': return parseNode(reOpt);
+        case reLBracket: return parseRange();
+        case reRBracket: assert(0 && "unhandled ]");
         default:  return reMakeChar(token);
     }
 }

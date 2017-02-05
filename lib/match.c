@@ -53,8 +53,16 @@ static bool inputMatches(const char input, const int token) {
         case reDot: return true;
         case reDigit: return isdigit(input);
         case reNonDigit: return !isdigit(input);
+        case reLBracket: assert(0 && "leftover [");
+        case reRBracket: assert(0 && "leftover ]");
     }
     return input == token;
+}
+
+/// Checks whether the given input symbol is within the range
+/// specified by the (inclusive) lower and upper bounds.
+static bool inputMatchesRange(char input, char lowerbound, char upperbound) {
+    return input >= lowerbound && input <= upperbound;
 }
 
 /// Evaluates the given node, and returns true if the node
@@ -82,6 +90,14 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
         case reOpt:
             addBranch(branch->input, node + 1);
             return consumeNode(branch, node->operand);
+        case reRange:
+            if (!inputMatchesRange(branch->input, node->lowerbound, node->upperbound)) {
+                killBranch(branch);
+            } else {
+                advanceInput(branch);
+                return true;
+            }
+            break;
     }
     return false;
 }
