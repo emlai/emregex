@@ -1,5 +1,17 @@
 # Weekly reports
 
+## Week 4
+
+Time used: ~3 hours
+
+- Implemented negated range expression, e.g. `[^abc]` and `[^a-c]`.
+- Documented and wrote tests for the new stuff.
+- Attempted to implement or-expression but got stuck, will continue on
+  it next week. It's almost done.
+- Next up: finish or-expression, refactor code to structure it better,
+  implement anchors (e.g. `^` and `$`), validate user input instead of
+  crashing on invalid input.
+
 ## Week 3
 
 Time used: ~2 hours
