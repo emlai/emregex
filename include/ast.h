@@ -1,6 +1,8 @@
 #ifndef EMREGEX_AST_H
 #define EMREGEX_AST_H
 
+#include <stdbool.h>
+
 /// The type of a regex node.
 typedef enum reNodeType {
     reChar, /// An ASCII character or a token, stored in `ch`.
@@ -22,10 +24,15 @@ typedef struct reNode {
             int elemcount;
         };
         struct {
-            int lowerbound; // the minimum character when type == reRange
-            int upperbound; // the maximum character when type == reRange
+            union {
+                struct {
+                    int lowerbound; // the minimum character when type == reRange
+                    int upperbound; // the maximum character when type == reRange
+                };
+                char* characters; // the list of characters when type == reRange2
+            };
+            bool negated; // whether the range is negated (it has the ^ prefix).
         };
-        char* characters; // the list of characters when type == reRange2
         struct reNode* operand;
         int ch; // a char (< 256) or a reToken (>= 256).
     };

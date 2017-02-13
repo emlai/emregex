@@ -47,8 +47,18 @@ static void parseSeq(reNode* node, const char terminator) {
 /// Parses a bracket-delimited range, e.g. [a-z] or [abc].
 static reNode parseRange(void) {
     reNode node;
-    node.lowerbound = lex();
+
     int ch = lex();
+    if (ch == '^') {
+        // Negated range, e.g. [^abc].
+        node.negated = true;
+        node.lowerbound = lex();
+    } else {
+        node.negated = false;
+        node.lowerbound = ch;
+    }
+
+    ch = lex();
     if (ch == '-') {
         // Contiguous range expressed with a hyphen, e.g. [a-z].
         node.type = reRange;

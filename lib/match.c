@@ -61,16 +61,17 @@ static bool inputMatches(const char input, const int token) {
 
 /// Checks whether the given input symbol is within the range
 /// specified by the (inclusive) lower and upper bounds.
-static bool inputMatchesRange(char input, char lowerbound, char upperbound) {
+static bool inputMatchesRange(char input, char lowerbound, char upperbound, bool negated) {
+    if (negated) return input < lowerbound || input > upperbound;
     return input >= lowerbound && input <= upperbound;
 }
 
 /// Checks whether the given input symbol is in the given character array.
-static bool inputMatchesRange2(char input, char* characters) {
+static bool inputMatchesRange2(char input, char* characters, bool negated) {
     while (*characters)
         if (*characters++ == input)
-            return true;
-    return false;
+            return !negated;
+    return negated;
 }
 
 /// Evaluates the given node, and returns true if the node
@@ -99,7 +100,7 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
             addBranch(branch->input, node + 1);
             return consumeNode(branch, node->operand);
         case reRange:
-            if (!inputMatchesRange(branch->input, node->lowerbound, node->upperbound)) {
+            if (!inputMatchesRange(branch->input, node->lowerbound, node->upperbound, node->negated)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);
@@ -107,7 +108,7 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
             }
             break;
         case reRange2:
-            if (!inputMatchesRange2(branch->input, node->characters)) {
+            if (!inputMatchesRange2(branch->input, node->characters, node->negated)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);

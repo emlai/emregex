@@ -191,6 +191,28 @@ check "[abc]*" do |p|
     p.should_not_match "ad"
 end
 
+check "[^bcd]*" do |p|
+    p.should_match "a"
+    p.should_match "e"
+    p.should_match "ae"
+
+    p.should_not_match "b"
+    p.should_not_match "c"
+    p.should_not_match "d"
+    p.should_not_match "ad"
+end
+
+check "[^b-d]*" do |p|
+    p.should_match "a"
+    p.should_match "e"
+    p.should_match "ae"
+
+    p.should_not_match "b"
+    p.should_not_match "c"
+    p.should_not_match "d"
+    p.should_not_match "ad"
+end
+
 require_relative "errors"
 require_relative "ast_printer_test"
 require_relative "benchmark"
