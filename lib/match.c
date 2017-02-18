@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 #include <assert.h>
@@ -15,33 +16,38 @@ typedef struct reBranch {
 extern reNode root;
 
 /// Storage and bookkeeping data for the current set of branches.
-#define MAX_BRANCHES 1024
-static reBranch branches[MAX_BRANCHES];
+static reBranch* branches;
 static int branchcount = 0;
+static int branchcapacity = 0;
+#define get(branch) branches[branch]
 
 /// The input stream, a file or the standard input stream.
 static FILE* inputfile;
 
 /// Advances the input member of the given branch to the next
 /// character read from the input stream.
-static inline void advanceInput(reBranch* branch) {
+static inline void advanceInput(int branch) {
     int input = getc(inputfile);
-    branch->input = (input == EOF || input == '\n') ? '\0' : input;
+    get(branch).input = (input == EOF || input == '\n') ? '\0' : input;
 }
 
 /// Removes the given branch from the branches array.
-void killBranch(reBranch* branch) {
-    assert(branch >= branches && branch < branches + branchcount);
+void killBranch(int branch) {
+    assert(branch >= 0 && branch < branchcount);
     // shift elements after this branch
-    int count = branchcount - (branch - branches) - 1;
-    memmove(branch, branch + 1, count * sizeof(reBranch));
+    int count = branchcount - branch - 1;
+    memmove(branches + branch, branches + branch + 1, count * sizeof(reBranch));
     branchcount--;
 }
 
 /// Creates a new branch and adds it to the branches array.
 /// Only MAX_BRANCHES branches can be in the array at once.
 void addBranch(char input, const reNode* node) {
-    assert(branchcount < MAX_BRANCHES);
+    if (branchcount >= branchcapacity) {
+        branchcapacity = branchcapacity ? branchcapacity * 2 : 1;
+        branches = realloc(branches, branchcapacity * sizeof(reBranch));
+        assert(branches);
+    }
     branches[branchcount].input = input;
     branches[branchcount].node = node;
     branchcount++;
@@ -76,10 +82,10 @@ static bool inputMatchesRange2(char input, char* characters, bool negated) {
 
 /// Evaluates the given node, and returns true if the node
 /// should be consumed at the top level (i.e. in branchHasMatch()).
-static bool consumeNode(reBranch* branch, const reNode* node) {
+static bool consumeNode(int branch, const reNode* node) {
     switch (node->type) {
         case reChar:
-            if (!inputMatches(branch->input, node->ch)) {
+            if (!inputMatches(get(branch).input, node->ch)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);
@@ -93,14 +99,14 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
             }
             return true;
         case reStar:
-            addBranch(branch->input, node + 1);
+            addBranch(get(branch).input, node + 1);
             consumeNode(branch, node->operand);
             break;
         case reOpt:
-            addBranch(branch->input, node + 1);
+            addBranch(get(branch).input, node + 1);
             return consumeNode(branch, node->operand);
         case reRange:
-            if (!inputMatchesRange(branch->input, node->lowerbound, node->upperbound, node->negated)) {
+            if (!inputMatchesRange(get(branch).input, node->lowerbound, node->upperbound, node->negated)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);
@@ -108,7 +114,7 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
             }
             break;
         case reRange2:
-            if (!inputMatchesRange2(branch->input, node->characters, node->negated)) {
+            if (!inputMatchesRange2(get(branch).input, node->characters, node->negated)) {
                 killBranch(branch);
             } else {
                 advanceInput(branch);
@@ -121,13 +127,13 @@ static bool consumeNode(reBranch* branch, const reNode* node) {
 
 /// Advances the specified branch and returns true if a match
 /// has been found in the branch.
-bool branchHasMatch(reBranch* branch) {
-    if (branch->node >= root.elems + root.elemcount) { // node out of bounds
-        if (branch->input != '\0') killBranch(branch);
-        return branch->input == '\0';
+bool branchHasMatch(int branch) {
+    if (get(branch).node >= root.elems + root.elemcount) { // node out of bounds
+        if (get(branch).input != '\0') killBranch(branch);
+        return get(branch).input == '\0';
     }
-    if (consumeNode(branch, branch->node)) {
-        branch->node++; // consume top-level node
+    if (consumeNode(branch, get(branch).node)) {
+        get(branch).node++; // consume top-level node
     }
     return false;
 }
@@ -137,11 +143,11 @@ bool branchHasMatch(reBranch* branch) {
 bool reMatch(FILE* input) {
     inputfile = input;
     addBranch(0, &root.elems[0]);
-    advanceInput(&branches[0]);
+    advanceInput(0);
 
     while (branchcount > 0) {
-        for (int idx = 0; idx < branchcount; idx++) {
-            if (branchHasMatch(&branches[idx])) {
+        for (int branch = 0; branch < branchcount; branch++) {
+            if (branchHasMatch(branch)) {
                 return true;
             }
         }
