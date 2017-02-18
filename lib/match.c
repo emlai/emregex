@@ -31,7 +31,7 @@ static inline void advanceInput(reBranch* branch) {
 
 /// Removes the given branch from the branches array.
 void killBranch(reBranch* branch) {
-    assert(branchcount < MAX_BRANCHES);
+    assert(branch >= branches && branch < branches + branchcount);
     // shift elements after this branch
     int count = branchcount - (branch - branches) - 1;
     memmove(branch, branch + 1, count * sizeof(reBranch));
