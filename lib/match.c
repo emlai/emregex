@@ -6,6 +6,7 @@
 #include "match.h"
 #include "ast.h"
 #include "lex.h"
+#include "dynarray.h"
 
 /// A specific path in the matcher state graph.
 typedef struct reBranch {
@@ -16,10 +17,9 @@ typedef struct reBranch {
 extern reNode root;
 
 /// Storage and bookkeeping data for the current set of branches.
-static reBranch* branches;
-static int branchcount = 0;
-static int branchcapacity = 0;
-#define get(branch) branches[branch]
+reDefineDynArrayOf(reBranch);
+static reDynArray(reBranch) branches;
+#define get(branch) branches.data[branch]
 
 /// The input stream, a file or the standard input stream.
 static FILE* inputfile;
@@ -33,24 +33,13 @@ static inline void advanceInput(int branch) {
 
 /// Removes the given branch from the branches array.
 void killBranch(int branch) {
-    assert(branch >= 0 && branch < branchcount);
-    // shift elements after this branch
-    int count = branchcount - branch - 1;
-    memmove(branches + branch, branches + branch + 1, count * sizeof(reBranch));
-    branchcount--;
+    reDynArrayRemoveAt(branch, branches);
 }
 
 /// Creates a new branch and adds it to the branches array.
 /// Only MAX_BRANCHES branches can be in the array at once.
 void addBranch(char input, const reNode* node) {
-    if (branchcount >= branchcapacity) {
-        branchcapacity = branchcapacity ? branchcapacity * 2 : 1;
-        branches = realloc(branches, branchcapacity * sizeof(reBranch));
-        assert(branches);
-    }
-    branches[branchcount].input = input;
-    branches[branchcount].node = node;
-    branchcount++;
+    reDynArrayPush(((reBranch) {input, node}), branches);
 }
 
 /// Checks whether the given input symbol matches the token.
@@ -93,8 +82,8 @@ static bool consumeNode(int branch, const reNode* node) {
             }
             break;
         case reSeq:
-            for (int idx = 0; idx < node->elemcount; idx++) {
-                if (!consumeNode(branch, &node->elems[idx]))
+            for (int idx = 0; idx < node->elems.count; idx++) {
+                if (!consumeNode(branch, &node->elems.data[idx]))
                     return false;
             }
             return true;
@@ -128,7 +117,7 @@ static bool consumeNode(int branch, const reNode* node) {
 /// Advances the specified branch and returns true if a match
 /// has been found in the branch.
 bool branchHasMatch(int branch) {
-    if (get(branch).node >= root.elems + root.elemcount) { // node out of bounds
+    if (get(branch).node >= root.elems.data + root.elems.count) { // node out of bounds
         if (get(branch).input != '\0') killBranch(branch);
         return get(branch).input == '\0';
     }
@@ -142,11 +131,11 @@ bool branchHasMatch(int branch) {
 /// returning true if input matches the regex.
 bool reMatch(FILE* input) {
     inputfile = input;
-    addBranch(0, &root.elems[0]);
+    addBranch(0, &root.elems.data[0]);
     advanceInput(0);
 
-    while (branchcount > 0) {
-        for (int branch = 0; branch < branchcount; branch++) {
+    while (branches.count > 0) {
+        for (int branch = 0; branch < branches.count; branch++) {
             if (branchHasMatch(branch)) {
                 return true;
             }

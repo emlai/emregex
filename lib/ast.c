@@ -18,9 +18,9 @@ static void rePrintNode(reNode* node) {
             break;
         case reSeq:
             printf("(seq");
-            for (int idx = 0; idx < node->elemcount; idx++) {
+            for (int idx = 0; idx < node->elems.count; idx++) {
                 printf(" ");
-                rePrintNode(&node->elems[idx]);
+                rePrintNode(&node->elems.data[idx]);
             }
             printf(")");
             break;

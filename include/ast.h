@@ -2,6 +2,7 @@
 #define EMREGEX_AST_H
 
 #include <stdbool.h>
+#include "dynarray.h"
 
 /// The type of a regex node.
 typedef enum reNodeType {
@@ -15,14 +16,14 @@ typedef enum reNodeType {
             /// [aeiou], the null-terminated character list in `alternatives`.
 } reNodeType;
 
+typedef struct reNode reNode;
+reDefineDynArrayOf(reNode);
+
 /// A regex AST node. See above for details on member variables.
 typedef struct reNode {
     reNodeType type;
     union {
-        struct {
-            struct reNode* elems; // the element array when type == reSeq
-            int elemcount;
-        };
+        reDynArray(reNode) elems; // the element array when type == reSeq
         struct {
             union {
                 struct {
