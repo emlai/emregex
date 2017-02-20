@@ -1,5 +1,19 @@
 # Weekly reports
 
+## Week 5
+
+Time used: ~6 hours
+
+- Implemented a dynamic resizable array type to refactor out duplicate
+  `realloc` calls in multiple places that basically did the same thing.
+- Made the program work with infinitely complex inputs (by amount of
+  simultaneous state machine branches).
+- Documented a performance benchmark on a big test input.
+- Added some usage guidance to the README, as per code review feedback.
+- Found a few corner-case bugs that had gone unnoticed by the test suite.
+- Wrote the first version of the implementation document, with an overview
+  of the program's structure and descriptions of the aforementioned bugs.
+
 ## Week 4
 
 Time used: ~3 hours
