@@ -20,7 +20,7 @@ typedef struct reNode reNode;
 reDefineDynArrayOf(reNode);
 
 /// A regex AST node. See above for details on member variables.
-typedef struct reNode {
+struct reNode {
     reNodeType type;
     union {
         reDynArray(reNode) elems; // the element array when type == reSeq
@@ -37,7 +37,7 @@ typedef struct reNode {
         struct reNode* operand;
         int ch; // a char (< 256) or a reToken (>= 256).
     };
-} reNode;
+};
 
 reNode reMakeChar(int ch);
 void rePrintAST(void);
