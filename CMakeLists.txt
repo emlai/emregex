@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+set(CMAKE_C_FLAGS "-std=c99 ${CMAKE_C_FLAGS}")
 file(GLOB LIBEMREGEX_SOURCES include/*.h lib/*.c)
 add_library(libemregex ${LIBEMREGEX_SOURCES})
 set_target_properties(libemregex PROPERTIES OUTPUT_NAME emregex)
