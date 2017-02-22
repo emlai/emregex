@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 2.8)
+project(emregex)
 set(CMAKE_C_FLAGS "-std=c99 ${CMAKE_C_FLAGS}")
 file(GLOB LIBEMREGEX_SOURCES include/*.h lib/*.c)
 add_library(libemregex ${LIBEMREGEX_SOURCES})
@@ -8,3 +9,12 @@ add_executable(emregex src/main.c)
 target_link_libraries(emregex libemregex)
 enable_testing()
 add_test(NAME emregex-test COMMAND test/tester.rb $<TARGET_FILE:emregex>)
+
+# Set up code coverage report generation.
+file(DOWNLOAD https://github.com/bilke/cmake-modules/raw/master/CodeCoverage.cmake
+    ${CMAKE_BINARY_DIR}/cmake-modules/CodeCoverage.cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR}/cmake-modules)
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    include(CodeCoverage)
+    setup_target_for_coverage(${PROJECT_NAME}_coverage ctest coverage)
+endif()

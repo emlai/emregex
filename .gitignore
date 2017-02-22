@@ -16,3 +16,6 @@ CTestTestfile.cmake
 ### Outputs ###
 *.a
 emregex
+
+cmake-modules/
+coverage/
