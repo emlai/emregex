@@ -2,4 +2,10 @@ language: c
 compiler:
   - clang
   - gcc
-script: cmake . && make && ctest --output-on-failure
+before_install:
+  - sudo apt-get install lcov
+  - pip install --user cpp-coveralls
+script:
+  - cmake . -DCMAKE_C_FLAGS='-coverage' && make && ctest --output-on-failure && make emregex_coverage
+after_success:
+  - coveralls
