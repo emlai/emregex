@@ -1,3 +1,8 @@
+# emregex
+
+[![Build Status](https://travis-ci.org/emlai/emregex.svg?branch=master)](https://travis-ci.org/emlai/emregex)
+[![Coverage Status](https://coveralls.io/repos/github/emlai/emregex/badge.svg)](https://coveralls.io/github/emlai/emregex)
+
 ## Building from source
 
 1. The following dependencies are needed: a C compiler and CMake.
