@@ -8,4 +8,4 @@ before_install:
 script:
   - cmake . -DCMAKE_C_FLAGS='-coverage' && make && ctest --output-on-failure && make emregex_coverage
 after_success:
-  - coveralls
+  - coveralls --exclude CMakeFiles
