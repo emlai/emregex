@@ -18,6 +18,6 @@ def measure(regex, allowed_time, input)
     exit 1
 end
 
-measure "a(bc)?d*d", 0.0105, ("abcdddddddddaddddddddd" * 1000)
+measure "a(bc)?d*d", 0.012, ("abcdddddddddaddddddddd" * 1000)
 measure "(foo)*", 0.075, ("foo" * 10000)
-measure "a*b", 0.013, ("aa" * 10000 + "b")
+measure "a*b", 0.015, ("aa" * 10000 + "b")
