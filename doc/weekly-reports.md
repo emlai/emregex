@@ -1,5 +1,15 @@
 # Weekly reports
 
+## Week 6
+
+Time used: ~4 hours
+
+- Set up Travis continuous integration.
+- Found a way to generate test coverage reports. Set up Travis to do
+  that after each successful build, and submit those reports to
+  [Coveralls][2]. The coverage is currently at ~90%.
+- Wrote some more testing documentation.
+
 ## Week 5
 
 Time used: ~6 hours
@@ -71,3 +81,4 @@ Time used: ~15 hours
   NFA/DFA.
 
 [1]: https://en.wikipedia.org/wiki/Kleene_star
+[2]: https://coveralls.io/github/emlai/emregex
