@@ -1,5 +1,16 @@
 # Weekly reports
 
+## Week 7
+
+Time used: ~2 hours
+
+- Generated online documentation from the doc comments using Doxygen.
+  The generated docs are available [here][3].
+- Finished the implementation document and the testing document.
+- Wrote more usage instructions in the README.
+- Fixed the command-line `--print-ast` flag to work regardless of its
+  position relative to the regex pattern argument.
+
 ## Week 6
 
 Time used: ~4 hours
@@ -82,3 +93,4 @@ Time used: ~15 hours
 
 [1]: https://en.wikipedia.org/wiki/Kleene_star
 [2]: https://coveralls.io/github/emlai/emregex
+[3]: https://emlai.github.io/emregex/files.html
