@@ -3,6 +3,13 @@
 [![Build Status](https://travis-ci.org/emlai/emregex.svg?branch=master)](https://travis-ci.org/emlai/emregex)
 [![Coverage Status](https://coveralls.io/repos/github/emlai/emregex/badge.svg)](https://coveralls.io/github/emlai/emregex)
 
+This is a simple public domain regex engine library and command-line tool,
+implemented in the C programming language without any external dependencies
+aside from the C standard library. It is far from full-featured, and there
+are currently still some known bugs (listed [here](doc/implementation.md#bugs)).
+For information about the internals of this project, check the contents of
+the [doc](doc) directory.
+
 ## Building from source
 
 1. The following dependencies are needed: a C compiler and CMake.
