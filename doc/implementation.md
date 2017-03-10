@@ -7,7 +7,8 @@ engine.
 
 emregex follows a library-based design. The reusable components have been
 extracted to their own library named `libemregex` (implemented in the `lib`
-directory), allowing for reuse in other programs or libraries. The command-line
+directory, with the public header files in the `include` directory),
+allowing for reuse in other programs or libraries. The command-line
 interface (i.e. the `emregex` program) to this library is implemented in the
 `src` directory.
 
