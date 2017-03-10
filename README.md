@@ -8,7 +8,8 @@ implemented in the C programming language without any external dependencies
 aside from the C standard library. It is far from full-featured, and there
 are currently still some known bugs (listed [here](doc/implementation.md#bugs)).
 For information about the internals of this project, check the contents of
-the [doc](doc) directory.
+the [doc](doc) directory. Online documentation for the libemregex API
+can be found [here](https://emlai.github.io/emregex/files.html).
 
 ## Building from source
 
