@@ -8,6 +8,8 @@
 1. The following dependencies are needed: a C compiler and CMake.
    To run the tests you also need Ruby.
 2. Run `cmake -G "Unix Makefiles" .` to generate a build system.
+   If you wish to compile a release build with optimizations, add
+   the flag `-DCMAKE_BUILD_TYPE=Release` to the command.
 3. Run `make` to build everything. This will generate an `emregex`
    executable in the project root directory.
 4. Run `ctest --output-on-failure` to run the tests, reporting any
