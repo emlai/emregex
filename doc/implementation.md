@@ -1,8 +1,19 @@
 # emregex Implementation Document
 
-## Structure
+This document describes the inner workings of the emregex regular expression
+engine.
 
-The program consists of the following steps:
+## Architecture
+
+emregex follows a library-based design. The reusable components have been
+extracted to their own library named `libemregex` (implemented in the `lib`
+directory), allowing for reuse in other programs or libraries. The command-line
+interface (i.e. the `emregex` program) to this library is implemented in the
+`src` directory.
+
+## Algorithm
+
+The parsing and regex matching algorithm consists of the following steps:
 
 1. The program first [tokenizes][1] the input regex pattern. This is implemented
    in `lib/lex.c` and `lib/lex.h`.
