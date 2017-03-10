@@ -26,3 +26,7 @@ echo "text to match" | ./emregex "regex pattern"
 The program prints `match` and exits with the status 0 if the
 given string matches the regex passed as the argument, or
 `no match` with a non-zero exit status if it doesn't.
+
+You can also print the abstract syntax tree of the parsed regex
+pattern by invoking `emregex` with the `--print-ast` flag. This
+might be useful for e.g. debugging the program.
