@@ -10,7 +10,10 @@
 2. Run `cmake -G "Unix Makefiles" .` to generate a build system.
 3. Run `make` to build everything. This will generate an `emregex`
    executable in the project root directory.
-4. Run `make test` to run the tests.
+4. Run `ctest --output-on-failure` to run the tests, reporting any
+   errors in case of test failure. `make test` can also be used to
+   run the tests, but it doesn't print any error messages for
+   failing test cases.
 
 ## Usage
 

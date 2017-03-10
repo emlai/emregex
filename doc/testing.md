@@ -19,7 +19,9 @@ following:
   sample input pattern.
 
 All of these scripts are run automatically when the `test` target of
-the build system is invoked (e.g. via `make test`).
+the build system is invoked (e.g. via `make test`). Note: the tests can
+also be run with the command `ctest --output-on-failure`, which is also
+required if you wish to see the error messages of failed test cases.
 
 ## Performance
 
