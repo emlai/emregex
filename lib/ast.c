@@ -47,4 +47,5 @@ static void rePrintNode(reNode* node) {
 void rePrintAST(void) {
     extern reNode root;
     rePrintNode(&root);
+    printf("\n");
 }

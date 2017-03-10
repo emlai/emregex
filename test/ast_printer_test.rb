@@ -1,5 +1,5 @@
 regex = "a(bc)?d*"
-expected_ast = "(seq a (opt (seq b c)) (star d))"
+expected_ast = "(seq a (opt (seq b c)) (star d))\n"
 actual_ast = `#{$emregex} "#{regex}" --print-ast`
 
 if actual_ast != expected_ast
