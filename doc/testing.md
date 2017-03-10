@@ -1,5 +1,26 @@
 # emregex Testing Document
 
+## Automated test scripts
+
+There's a bunch of automated testing scripts written in the Ruby
+programming language in the `test/` directory. These consist of the
+following:
+
+- `tester.rb`: This is the primary test script. It feeds the `emregex`
+  program various inputs and validates the output. There's some extra
+  code to allow writing the test cases in a nice declarative manner,
+  and to print useful error messages in case of test failure.
+- `errors.rb`: This file contains test cases that make sure the
+  `emregex` program responds appropriately to invalid input.
+- `benchmark.rb`: This script tests that the program performs
+  efficiently with various large input sets.
+- `ast_printer_test.rb`: This test checks that the program outputs the
+  correct abstract syntax tree with the `--print-ast` flag, given a
+  sample input pattern.
+
+All of these scripts are run automatically when the `test` target of
+the build system is invoked (e.g. via `make test`).
+
 ## Performance
 
 The program matches a 50MB text file (`test/bigtestfile`) in approximately 2.4
